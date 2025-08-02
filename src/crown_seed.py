@@ -1,35 +1,36 @@
 #!/usr/bin/env python3
 """
-crown_seed.py – Crown Glyph v0.1  (Pulse & Echo)
+crown_seed.py – Crown Glyph v0.2  (Sense & Shift)
 Run, type anything, receive the crown glyph ⥁ and quit.
 
 Copyleft Parity‑7.0   © 2025 Jesse + contributors
 """
-import datetime, itertools, json, sys, threading, time
+import datetime
 
-def ticker(label, interval, stop):
-    """IAM stub: emits {"iam": <label>, "t": <beat>} every <interval>s."""
-    for beat in itertools.count():
-        if stop(): break
-        print(json.dumps({"iam": label, "t": beat}))
-        time.sleep(interval)
+from iam import IAM
+from vitals_cli import VitalsDisplay
+from recognizer import recognize
+
 
 def main():
-    stop_flag = {"halt": False}
-    stop      = lambda: stop_flag["halt"]
-
-    # heartbeat 1 Hz, breath 0.5 Hz
-    threading.Thread(target=ticker, args=("heartbeat", 1, stop), daemon=True).start()
-    threading.Thread(target=ticker, args=("breath",    2, stop), daemon=True).start()
+    iam = IAM()
+    iam.start()
+    vitals = VitalsDisplay(iam)
+    vitals.start()
 
     try:
         prompt = input("⥁  ")          # PAL hook placeholder
     except (KeyboardInterrupt, EOFError):
         prompt = ""
-    stamp = datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds")
-    print(f"⥁⟨{prompt.strip()}⟩⥁  # {stamp}")   # crown echo
 
-    stop_flag["halt"] = True           # stop tickers and exit
+    recognize(prompt, iam)
+    for token in prompt.split():
+        iam.on_token(token)
+
+    stamp = datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds")
+    vitals.stop()
+    iam.stop()
+    print(f"⥁⟨{prompt.strip()}⟩⥁  # {stamp}")   # crown echo
 
 if __name__ == "__main__":
     main()
