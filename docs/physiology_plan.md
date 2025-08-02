@@ -1,5 +1,7 @@
 # Intentional Automated Modulation Plan
 
+*Licensed under [CC BY-SA 4.0](../LICENSE-SYMBOLIC.md) © 2025 Kalpatango + contributors*
+
 ## 1 Why have an IAM layer at all?
 
 | Problem in vanilla LLMs                               | IAM answer (symbolic / functional)                                                      |
