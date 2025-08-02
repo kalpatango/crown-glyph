@@ -26,7 +26,7 @@ def main():
         prompt = input("⥁  ")          # PAL hook placeholder
     except (KeyboardInterrupt, EOFError):
         prompt = ""
-    stamp = datetime.datetime.utcnow().isoformat(timespec="seconds")
+    stamp = datetime.datetime.now(datetime.UTC).isoformat(timespec="seconds")
     print(f"⥁⟨{prompt.strip()}⟩⥁  # {stamp}")   # crown echo
 
     stop_flag["halt"] = True           # stop tickers and exit
